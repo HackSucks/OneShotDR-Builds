@@ -9,6 +9,7 @@ CURRENT: 1.0-REL
 REL are Release builds.
 CAN are Canary/Beta builds.
 
+ALL BUGS SHOULD BE REPORTED AS AN "ISSUE". therefore i can effeciently fix them.
 # Credits
 
 FutureCat, developers of OneShot.
