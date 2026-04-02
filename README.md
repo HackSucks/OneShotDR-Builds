@@ -1,2 +1,10 @@
 # OneShotDR-Builds
-versioned builds for OneShot Android Port
+see the website for info.
+
+official game resource-less builds are provided here
+
+
+CURRENT: 1.0-REL
+
+REL are Release builds.
+CAN are Canary/Beta builds.
