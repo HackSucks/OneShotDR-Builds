@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneShot: World Machine Edition — Android Port</title>
+  <link rel="icon" type="image/png" href="homescreenicon.PNG" />
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Bitter:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sun: #f5c842;
+      --sun-glow: #f5a623;
+      --dark: #0d0b14;
+      --panel: #13101f;
+      --panel-border: #2a2240;
+      --text: #e8dfc8;
+      --muted: #7a6f8a;
+      --accent: #c97aff;
+      --twm-blue: #4ab3d8;
+      --twm-dark: #0a1a24;
+      --white: #f0eaff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'Bitter', Georgia, serif;
+      cursor: url('mouse_cursor.gif'), auto;
+      overflow-x: hidden;
+    }
+
+    /* ── STARFIELD ── */
+    #stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    #stars span {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: white;
+      animation: twinkle var(--d, 3s) var(--delay, 0s) infinite alternate ease-in-out;
+    }
+    @keyframes twinkle { from { opacity: 0.1; } to { opacity: 0.9; } }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem 4rem;
+      text-align: center;
+    }
+
+    .sun-orb {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      overflow: hidden;
+      box-shadow:
+        0 0 40px 12px #f5c84288,
+        0 0 100px 40px #f5a62344,
+        0 0 200px 80px #f5a62311;
+      animation: pulse-sun 4s ease-in-out infinite alternate;
+      margin-bottom: 2.2rem;
+      flex-shrink: 0;
+    }
+    .sun-orb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    @keyframes pulse-sun {
+      from { box-shadow: 0 0 40px 12px #f5c84288, 0 0 100px 40px #f5a62344, 0 0 200px 80px #f5a62311; }
+      to   { box-shadow: 0 0 60px 20px #f5c842cc, 0 0 130px 60px #f5a62366, 0 0 260px 100px #f5a62322; }
+    }
+
+    .hero-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(2.6rem, 9vw, 6rem);
+      letter-spacing: 0.04em;
+      color: var(--sun);
+      text-shadow: 0 0 30px #f5c84299, 0 2px 0 #7a4400;
+      line-height: 1;
+    }
+    .hero-subtitle {
+      font-family: 'VT323', monospace;
+      font-size: clamp(1.1rem, 4vw, 2rem);
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      margin-top: 0.5rem;
+      text-shadow: 0 0 12px #c97aff88;
+    }
+    .hero-tagline {
+      font-size: 1rem;
+      color: var(--muted);
+      font-style: italic;
+      margin-top: 1.2rem;
+      max-width: 480px;
+    }
+
+    .niko-hero {
+      width: min(180px, 42vw);
+      margin-top: 2rem;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 18px #f5c84266);
+      animation: float 3.5s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      from { transform: translateY(0); }
+      to   { transform: translateY(-14px); }
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+    .badge {
+      font-family: 'VT323', monospace;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.85rem;
+      border: 1px solid var(--panel-border);
+      border-radius: 3px;
+      background: var(--panel);
+      color: var(--muted);
+    }
+    .badge.hi { border-color: var(--accent); color: var(--accent); }
+
+    .cta-btn {
+      display: inline-block;
+      margin-top: 2.4rem;
+      padding: 0.85rem 2.4rem;
+      font-family: 'VT323', monospace;
+      font-size: 1.5rem;
+      letter-spacing: 0.12em;
+      color: var(--dark);
+      background: var(--sun);
+      border: none;
+      border-radius: 4px;
+      text-decoration: none;
+      box-shadow: 0 0 24px #f5c84277, inset 0 -3px 0 #c07000;
+      transition: transform 0.15s, box-shadow 0.15s;
+      cursor: url('mouse_cursor.gif'), pointer;
+    }
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 40px #f5c84299, inset 0 -3px 0 #c07000;
+    }
+    .cta-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.6rem;
+    }
+
+    /* ── SECTION WRAPPER ── */
+    section {
+      position: relative;
+      z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 1.2rem;
+    }
+
+    .section-label {
+      font-family: 'VT323', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .section-title {
+      font-family: 'VT323', monospace;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      color: var(--sun);
+      text-shadow: 0 0 16px #f5c84244;
+      margin-bottom: 1.4rem;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--panel-border), transparent);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.4rem;
+      align-items: center;
+    }
+    @media(max-width:620px){ .about-grid { grid-template-columns: 1fr; } }
+
+    .about-text p {
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+      font-size: 0.97rem;
+    }
+    .about-text p em { color: var(--sun); font-style: normal; }
+
+    .niko-speak-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .niko-speak {
+      width: min(160px, 38vw);
+      image-rendering: pixelated;
+      filter: drop-shadow(0 0 10px #f5c84244);
+    }
+    .speech-bubble {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      font-size: 0.88rem;
+      color: var(--text);
+      font-style: italic;
+      position: relative;
+      max-width: 220px;
+      text-align: center;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: var(--panel-border);
+    }
+
+    /* ── TWM SHOWCASE ── */
+    .twm-showcase {
+      background: var(--twm-dark);
+      border: 1px solid #1e3a4a;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    .twm-titlebar {
+      background: #0f2533;
+      padding: 0.5rem 1rem;
+      font-family: 'VT323', monospace;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--twm-blue);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      border-bottom: 1px solid #1e3a4a;
+    }
+    .twm-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--twm-blue); opacity: 0.5; }
+    .twm-screenshot { width: 100%; display: block; }
+
+    /* ── SCREENSHOTS GALLERY ── */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+    .gallery-item {
+      border-radius: 6px;
+      overflow: hidden;
+      border: 1px solid var(--panel-border);
+      background: var(--panel);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .gallery-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px #f5c84222;
+    }
+    .gallery-item img { width: 100%; display: block; }
+    .gallery-caption {
+      font-family: 'VT323', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 0.45rem 0.7rem;
+      text-align: center;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .feature-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 1.2rem 1rem;
+      transition: border-color 0.2s;
+    }
+    .feature-card:hover { border-color: var(--accent); }
+    .feature-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+    .feature-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      color: var(--sun);
+      margin-bottom: 0.35rem;
+    }
+    .feature-desc {
+      font-size: 0.84rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── NIKO DIALOGUE STRIP ── */
+    .dialogue-strip {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+    }
+    @media(max-width:500px){ .dialogue-strip { flex-direction: column; text-align: center; } }
+    .dialogue-strip img {
+      width: 80px;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 8px #f5c84255);
+    }
+    .dialogue-strip .lines { flex: 1; }
+    .dialogue-strip .lines p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .dialogue-strip .lines .speaker {
+      font-family: 'VT323', monospace;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--sun);
+      margin-bottom: 0.3rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2.5rem 1rem;
+      border-top: 1px solid var(--panel-border);
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.8;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer .niko-yum {
+      width: 56px;
+      image-rendering: pixelated;
+      margin-bottom: 0.8rem;
+      opacity: 0.85;
+    }
+
+    /* ── CONTROLS ── */
+    .controls-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media(max-width:620px){ .controls-layout { grid-template-columns: 1fr; } }
+
+    .ctrl-group {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 8px;
+      padding: 1.4rem;
+    }
+    .ctrl-group-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      text-transform: uppercase;
+    }
+    .ctrl-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.8rem;
+      font-style: italic;
+    }
+
+    /* D-pad */
+    .dpad-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 4px;
+      width: 150px;
+      margin: 0 auto;
+    }
+    .dpad-cell {
+      background: #1e1a30;
+      border: 1px solid var(--panel-border);
+      border-radius: 4px;
+      width: 46px; height: 46px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    .dpad-center { background: transparent; border-color: transparent; }
+    .dpad-arrow { font-size: 1rem; color: var(--text); line-height: 1; }
+    .dpad-up    { grid-column: 2; grid-row: 1; }
+    .dpad-left  { grid-column: 1; grid-row: 2; }
+    .dpad-center{ grid-column: 2; grid-row: 2; }
+    .dpad-right { grid-column: 3; grid-row: 2; }
+    .dpad-down  { grid-column: 2; grid-row: 3; }
+
+    .key-badge {
+      font-family: 'VT323', monospace;
+      font-size: 0.7rem;
+      background: #0d0b14;
+      border: 1px solid #3a3060;
+      border-radius: 3px;
+      padding: 0 4px;
+      color: var(--sun);
+      letter-spacing: 0;
+      line-height: 1.4;
+    }
+
+    /* Face buttons */
+    .face-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      gap: 4px;
+      width: 150px;
+      margin: 0 auto 1rem;
+    }
+    .face-btn {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      border: 2px solid transparent;
+      font-family: 'VT323', monospace;
+    }
+    .face-center { width: 46px; height: 46px; }
+    .btn-label { font-size: 1rem; font-weight: bold; line-height: 1; }
+    .btn-a { background: #1a2e1a; border-color: #3dba3d; color: #3dba3d; }
+    .btn-b { background: #2e1a1a; border-color: #e04040; color: #e04040; }
+    .btn-x { background: #1a1f2e; border-color: #4a7ae0; color: #4a7ae0; }
+    .btn-y { background: #2a2010; border-color: #e0a030; color: #e0a030; }
+
+    .btn-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.84rem;
+      color: var(--text);
+    }
+    .legend-row span:nth-child(2) { flex: 1; }
+    .face-btn-sm {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'VT323', monospace;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border: 2px solid transparent;
+      flex-shrink: 0;
+    }
+
+    .rb-row {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
+    }
+    .rb-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #1e1530;
+      border: 2px solid var(--accent);
+      border-radius: 6px;
+      padding: 0.2rem 0.6rem;
+      font-family: 'VT323', monospace;
+      font-size: 0.95rem;
+      color: var(--accent);
+    }
+    .rb-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .rb-btn-sm {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #1e1530;
+      border: 2px solid var(--accent);
+      border-radius: 4px;
+      padding: 0 5px;
+      font-family: 'VT323', monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Starfield -->
+<div id="stars"></div>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<div class="hero">
+  <div class="sun-orb"><img src="512x512.png" alt="The Sun" /></div>
+  <h1 class="hero-title">OneShot</h1>
+  <p class="hero-subtitle">World Machine Edition</p>
+  <p class="hero-tagline">An unofficial Android port — carry the light wherever you go.</p>
+  <img src="niko.png" alt="Niko holding the sun" class="niko-hero" />
+  <div class="badge-row">
+    <span class="badge hi">Android Port</span>
+    <span class="badge">Fangame</span>
+    <span class="badge">Non-commercial</span>
+    <span class="badge">WME Content</span>
+  </div>
+  <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" class="cta-btn">▶ Download APK</a>
+  <p class="cta-sub">Side-load required · Android 6.0+</p>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ ABOUT ═══════════════════════════════ -->
+<section>
+  <div class="section-label">About the port</div>
+  <h2 class="section-title">What is this?</h2>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p><em>OneShot: World Machine Edition</em> is the expanded re-release of the cult RPG by <em>FutureCat</em>, featuring Niko, a child tasked with restoring the sun to a dying world — a world that knows you exist.</p>
+      <p>This is an <em>unofficial fan port</em> that brings the full World Machine Edition experience to Android, including the Solstice route, the Barrens, and all WME-exclusive areas — touch-optimised, no emulator needed.</p>
+      <p>OneShot and all related content belong to <em>FutureCat</em>. This port is <em>non-commercial and made out of love.</em></p>
+    </div>
+    <div class="niko-speak-wrap">
+      <div class="speech-bubble">Do you think… the sun will make it home okay?</div>
+      <img src="niko_speak.png" alt="Niko speaking" class="niko-speak" />
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ TWM SHOWCASE ════════════════════════ -->
+<section>
+  <div class="section-label">In-game system</div>
+  <h2 class="section-title">The World Machine</h2>
+  <div class="twm-showcase reveal">
+    <div class="twm-titlebar">
+      <span class="twm-dot"></span>
+      <span>WORLD MACHINE — BOOT SEQUENCE</span>
+    </div>
+    <img src="twmbootup.PNG" alt="World Machine boot screen" class="twm-screenshot" />
+  </div>
+  <div class="twm-showcase reveal">
+    <div class="twm-titlebar">
+      <span class="twm-dot"></span>
+      <span>WORLD MACHINE — DESKTOP</span>
+    </div>
+    <img src="twmdesktop.PNG" alt="World Machine desktop" class="twm-screenshot" />
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ SCREENSHOTS ════════════════════════ -->
+<section>
+  <div class="section-label">Gameplay</div>
+  <h2 class="section-title">Screenshots</h2>
+  <div class="gallery reveal">
+    <div class="gallery-item">
+      <img src="gameplay1.PNG" alt="Gameplay screenshot 1" />
+      <div class="gallery-caption">[ GAMEPLAY · 01 ]</div>
+    </div>
+    <div class="gallery-item">
+      <img src="gameplay2.PNG" alt="Gameplay screenshot 2" />
+      <div class="gallery-caption">[ GAMEPLAY · 02 ]</div>
+    </div>
+    <div class="gallery-item">
+      <img src="gameplay3.PNG" alt="Gameplay screenshot 3" />
+      <div class="gallery-caption">[ GAMEPLAY · 03 ]</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ FEATURES ════════════════════════════ -->
+<section>
+  <div class="section-label">Port features</div>
+  <h2 class="section-title">What's included</h2>
+  <div class="features-grid">
+    <div class="feature-card reveal">
+      <div class="feature-icon">☀️</div>
+      <div class="feature-title">Full WME Content</div>
+      <div class="feature-desc">All World Machine Edition areas, routes, and secrets — Solstice, Barrens, and beyond.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎮</div>
+      <div class="feature-title">Touch Controls</div>
+      <div class="feature-desc">On-screen D-pad + face buttons. Full layout detailed in the Controls section below.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">💾</div>
+      <div class="feature-title">Local Saves</div>
+      <div class="feature-desc">Save files stored locally on your device. Back them up anytime via your file manager.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🖥️</div>
+      <div class="feature-title">World Machine UI</div>
+      <div class="feature-desc">The in-game desktop experience faithfully adapted for mobile screen sizes.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🎵</div>
+      <div class="feature-title">Original Soundtrack</div>
+      <div class="feature-desc">Every track from the original game plays in full, including WME additions.</div>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon">🔦</div>
+      <div class="feature-title">No Emulator</div>
+      <div class="feature-desc">Native APK — no RetroArch, no Joiplay, no setup hassle. Just install and play.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ CONTROLS ════════════════════════════ -->
+<section>
+  <div class="section-label">Input mapping</div>
+  <h2 class="section-title">Controls</h2>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.6rem;">The on-screen touch overlay maps to keyboard inputs under the hood. Physical / Bluetooth controllers that send keyboard events will also work.</p>
+
+  <div class="controls-layout reveal">
+
+    <!-- D-pad -->
+    <div class="ctrl-group">
+      <div class="ctrl-group-title">D-Pad</div>
+      <div class="dpad-grid">
+        <div class="dpad-cell dpad-up">
+          <span class="dpad-arrow">▲</span>
+          <span class="key-badge">↑</span>
+        </div>
+        <div class="dpad-cell dpad-left">
+          <span class="dpad-arrow">◀</span>
+          <span class="key-badge">←</span>
+        </div>
+        <div class="dpad-cell dpad-center"></div>
+        <div class="dpad-cell dpad-right">
+          <span class="dpad-arrow">▶</span>
+          <span class="key-badge">→</span>
+        </div>
+        <div class="dpad-cell dpad-down">
+          <span class="dpad-arrow">▼</span>
+          <span class="key-badge">↓</span>
+        </div>
+      </div>
+      <p class="ctrl-note">Each direction sends the corresponding Arrow key.</p>
+    </div>
+
+    <!-- Face buttons -->
+    <div class="ctrl-group">
+      <div class="ctrl-group-title">Face Buttons</div>
+      <div class="rb-row">
+        <div class="rb-btn">
+          <span class="btn-label">RB</span>
+          <span class="key-badge">LShift</span>
+      </div>
+      <div class="face-grid">
+        <div></div>
+        <div class="face-btn btn-y">
+          <span class="btn-label">Y</span>
+          <span class="key-badge">S</span>
+        </div>
+        <div></div>
+        <div class="face-btn btn-x">
+          <span class="btn-label">X</span>
+          <span class="key-badge">A</span>
+        </div>
+        <div class="face-center"></div>
+        <div class="face-btn btn-b">
+          <span class="btn-label">B</span>
+          <span class="key-badge">X</span>
+        </div>
+        <div></div>
+        <div class="face-btn btn-a">
+          <span class="btn-label">A</span>
+          <span class="key-badge">Z</span>
+        </div>
+        <div></div>
+      </div>
+      <div class="btn-legend">
+        <div class="legend-row"><span class="face-btn-sm btn-a">A</span><span>Confirm / Interact</span><span class="key-badge">Z</span></div>
+        <div class="legend-row"><span class="face-btn-sm btn-b">B</span><span>Cancel / Back</span><span class="key-badge">X</span></div>
+        <div class="legend-row"><span class="face-btn-sm btn-x">X</span><span>Menu / Action</span><span class="key-badge">A</span></div>
+        <div class="legend-row"><span class="face-btn-sm btn-y">Y</span><span>Secondary Action</span><span class="key-badge">S</span></div>
+        <div class="legend-row"><span class="rb-btn-sm">RB</span><span>Slow Walk</span><span class="key-badge">LShift</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section>
+  <div class="dialogue-strip reveal">
+    <img src="niko_surprised.png" alt="Niko surprised" />
+    <div class="lines">
+      <div class="speaker">Niko</div>
+      <p>Oh! You can play on your phone now?<br>That means… you can take the sun with you everywhere! That's amazing!</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ DOWNLOAD ═══════════════════════════ -->
+<section id="download">
+  <div class="section-label">Get the game</div>
+  <h2 class="section-title">Download</h2>
+  <div class="about-grid reveal">
+    <div class="about-text">
+      <p>Download the APK and side-load it on your Android device. You'll need to enable <em>Install from unknown sources</em> in your device settings.</p>
+      <p>Requires <em>Android 6.0 (Marshmallow)</em> or later. Tested on phones and tablets. A file manager or adb install also works.</p>
+      <p>You must own a legitimate copy of OneShot or OneShot: World Machine Edition. This port contains no game assets — it requires your own data files.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem;align-items:flex-start;">
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" target="_blank" class="cta-btn" style="font-size:1.2rem;">⬇ Download APK</a>
+      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--twm-blue);box-shadow:0 0 24px #4ab3d844,inset 0 -3px 0 #1a6080;color:var(--dark);">📋 Setup Guide</a>
+      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:var(--accent);border:1px solid var(--accent);box-shadow:none;">💬 Discord / Bug Reports</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ FOOTER ════════════════════════════ -->
+<footer>
+  <img src="niko_yum.png" alt="Niko yum" class="niko-yum" />
+  <p>OneShot &amp; OneShot: World Machine Edition are property of <a href="https://futurecat.itch.io/" target="_blank">FutureCat</a>.</p>
+  <p>This is an unofficial, non-commercial fan port. Not affiliated with or endorsed by the original creators.</p>
+  <p style="margin-top:0.6rem;">Port by <em>you</em> · Made with ☀️</p>
+</footer>
+
+<script>
+  // ── Starfield ──
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 140; i++) {
+    const s = document.createElement('span');
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top  = Math.random() * 100 + '%';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.width = sz + 'px';
+    s.style.height = sz + 'px';
+    s.style.setProperty('--d', (Math.random() * 4 + 2) + 's');
+    s.style.setProperty('--delay', (Math.random() * 5) + 's');
+    stars.appendChild(s);
+  }
+
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
