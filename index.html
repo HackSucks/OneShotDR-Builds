@@ -19,6 +19,8 @@
       --twm-blue: #4ab3d8;
       --twm-dark: #0a1a24;
       --white: #f0eaff;
+      --green: #3dba3d;
+      --canary: #f5a623;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -139,6 +141,7 @@
       color: var(--muted);
     }
     .badge.hi { border-color: var(--accent); color: var(--accent); }
+    .badge.ver { border-color: var(--green); color: var(--green); }
 
     .cta-btn {
       display: inline-block;
@@ -249,6 +252,84 @@
       transform: translateX(-50%);
       border: 5px solid transparent;
       border-top-color: var(--panel-border);
+    }
+
+    /* ── VERSION BANNER ── */
+    .version-banner {
+      background: linear-gradient(135deg, #0d1a0d 0%, #0d0b14 60%);
+      border: 1px solid #2a4a2a;
+      border-radius: 8px;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .version-main {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .version-tag {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 16px #3dba3d88;
+    }
+    .version-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .version-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .vpill {
+      font-family: 'VT323', monospace;
+      font-size: 0.88rem;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.7rem;
+      border-radius: 3px;
+      background: var(--panel);
+    }
+    .vpill.green  { border: 1px solid var(--green);  color: var(--green); }
+    .vpill.blue   { border: 1px solid var(--twm-blue); color: var(--twm-blue); }
+    .vpill.purple { border: 1px solid var(--accent);  color: var(--accent); }
+    .vpill.muted  { border: 1px solid var(--panel-border); color: var(--muted); }
+
+    /* Build type legend */
+    .build-legend {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.4rem;
+    }
+    @media(max-width:520px){ .build-legend { grid-template-columns: 1fr; } }
+    .build-type {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+    }
+    .build-type.rel { border-color: var(--green); }
+    .build-type.can { border-color: var(--canary); }
+    .build-type-label {
+      font-family: 'VT323', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.35rem;
+    }
+    .build-type.rel .build-type-label { color: var(--green); }
+    .build-type.can .build-type-label { color: var(--canary); }
+    .build-type-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.6;
     }
 
     /* ── TWM SHOWCASE ── */
@@ -362,6 +443,113 @@
       color: var(--sun);
       margin-bottom: 0.3rem;
     }
+
+    /* ── RESADDER ── */
+    .resadder-box {
+      background: linear-gradient(135deg, #0a1a24 0%, #0d0b14 100%);
+      border: 1px solid var(--twm-blue);
+      border-radius: 8px;
+      padding: 1.6rem;
+      margin-bottom: 1.6rem;
+    }
+    .resadder-title {
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+      letter-spacing: 0.12em;
+      color: var(--twm-blue);
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .resadder-body {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.75;
+    }
+    .resadder-body em { color: var(--sun); font-style: normal; }
+    .resadder-body strong { color: var(--twm-blue); }
+    .platform-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 0.9rem;
+    }
+    .plat {
+      font-family: 'VT323', monospace;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      padding: 0.25rem 0.7rem;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .plat.win  { border-color: var(--twm-blue); color: var(--twm-blue); background: #071218; }
+    .plat.soon { border-color: var(--panel-border); color: var(--muted); background: var(--panel); }
+
+    /* ── BUG REPORTS ── */
+    .bug-box {
+      background: #1a0d0d;
+      border: 1px solid #5a2020;
+      border-radius: 8px;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+    }
+    .bug-icon { font-size: 2rem; flex-shrink: 0; margin-top: 0.1rem; }
+    .bug-body { flex: 1; }
+    .bug-body p { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 0.6rem; }
+    .bug-body p em { color: var(--sun); font-style: normal; }
+    .bug-body a.issue-btn {
+      display: inline-block;
+      font-family: 'VT323', monospace;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 1.1rem;
+      border: 1px solid #e04040;
+      border-radius: 4px;
+      color: #e04040;
+      background: #200a0a;
+      text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .bug-body a.issue-btn:hover { background: #e04040; color: var(--dark); }
+
+    /* ── CREDITS ── */
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .credit-card {
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      border-radius: 6px;
+      padding: 1.1rem 1rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .credit-card:hover { border-color: var(--sun); transform: translateY(-3px); }
+    .credit-role {
+      font-family: 'VT323', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.3rem;
+    }
+    .credit-name {
+      font-family: 'VT323', monospace;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      color: var(--sun);
+      margin-bottom: 0.3rem;
+    }
+    .credit-detail {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .credit-detail a { color: var(--accent); text-decoration: none; }
 
     /* ── FOOTER ── */
     footer {
@@ -573,6 +761,7 @@
     <span class="badge">Fangame</span>
     <span class="badge">Non-commercial</span>
     <span class="badge">WME Content</span>
+    <span class="badge ver">v1.0-REL</span>
   </div>
   <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" class="cta-btn">▶ Download APK</a>
   <p class="cta-sub">Side-load required · Android 6.0+</p>
@@ -593,6 +782,76 @@
     <div class="niko-speak-wrap">
       <div class="speech-bubble">Do you think… the sun will make it home okay?</div>
       <img src="niko_speak.png" alt="Niko speaking" class="niko-speak" />
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ VERSION ════════════════════════════ -->
+<section>
+  <div class="section-label">Release info</div>
+  <h2 class="section-title">Version</h2>
+
+  <div class="version-banner reveal">
+    <div class="version-main">
+      <div class="version-tag">v1.0-REL</div>
+      <div class="version-meta">Compiled 2 April 2026 · Based on OneShot WME v1.24.12.4.1</div>
+    </div>
+    <div class="version-pills">
+      <span class="vpill green">Stable Release</span>
+      <span class="vpill blue">ResAdder 1.0</span>
+      <span class="vpill purple">xnbcli included</span>
+      <span class="vpill muted">WME v1.24.12.4.1</span>
+    </div>
+  </div>
+
+  <div class="build-legend reveal">
+    <div class="build-type rel">
+      <div class="build-type-label">REL — Release</div>
+      <div class="build-type-desc">Stable builds intended for general use. Thoroughly tested before publishing. This is what you want unless you're helping test new features.</div>
+    </div>
+    <div class="build-type can">
+      <div class="build-type-label">CAN — Canary / Beta</div>
+      <div class="build-type-desc">Early-access builds with new features that may not be fully stable. Expect rough edges. Great for testers, but save often.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ RESADDER ═══════════════════════════ -->
+<section>
+  <div class="section-label">Setup tool</div>
+  <h2 class="section-title">ResAdder</h2>
+
+  <div class="resadder-box reveal">
+    <div class="resadder-title">⚙ ResAdder <span style="font-size:1rem;color:var(--muted);letter-spacing:0.05em;">v1.0</span></div>
+    <div class="resadder-body">
+      <p>ResAdder automatically adds your game resources to the APK — no manual file copying required. Place your game files and the APK in the same folder as the extracted ResAdder zip, run it, and it handles the rest.</p>
+      <p>You'll need a <em>Windows, Linux, or macOS</em> build of OneShot WME. Specifically, the <em>content</em> and <em>gamedata</em> folders from your copy of the game, plus the downloaded APK, must all sit in the same directory as the extracted ResAdder tool.</p>
+      <p><strong>Note:</strong> The Windows build of ResAdder is available now. <em>Linux and macOS builds are coming soon.</em></p>
+      <div class="platform-row">
+        <span class="plat win">✔ Windows</span>
+        <span class="plat soon">⏳ Linux — soon</span>
+        <span class="plat soon">⏳ macOS — soon</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ BUG REPORTS ════════════════════════ -->
+<section>
+  <div class="section-label">Something broken?</div>
+  <h2 class="section-title">Bug Reports</h2>
+  <div class="bug-box reveal">
+    <div class="bug-icon">🐛</div>
+    <div class="bug-body">
+      <p>All bugs should be reported as a GitHub <em>Issue</em>. This keeps everything organised so they can be tracked and fixed efficiently. Please include your Android version, a description of what happened, and steps to reproduce if possible.</p>
+      <p>Do <em>not</em> report bugs in Discord messages or comments — open an Issue so nothing gets lost.</p>
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" class="issue-btn">⚠ Open an Issue on GitHub</a>
     </div>
   </div>
 </section>
@@ -759,13 +1018,47 @@
   </div>
 </section>
 
-
 <section>
   <div class="dialogue-strip reveal">
     <img src="niko_surprised.png" alt="Niko surprised" />
     <div class="lines">
       <div class="speaker">Niko</div>
       <p>Oh! You can play on your phone now?<br>That means… you can take the sun with you everywhere! That's amazing!</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════ CREDITS ════════════════════════════ -->
+<section>
+  <div class="section-label">Made possible by</div>
+  <h2 class="section-title">Credits</h2>
+  <div class="credits-grid">
+    <div class="credit-card reveal">
+      <div class="credit-role">Original Game</div>
+      <div class="credit-name">FutureCat</div>
+      <div class="credit-detail">Developers of OneShot and OneShot: World Machine Edition. <a href="https://futurecat.itch.io/" target="_blank">futurecat.itch.io</a></div>
+    </div>
+    <div class="credit-card reveal">
+      <div class="credit-role">Android Port</div>
+      <div class="credit-name">Me, NVMe</div>
+      <div class="credit-detail">Port developer. Brought OneShot to Android with touch controls and ResAdder.</div>
+    </div>
+    <div class="credit-card reveal">
+      <div class="credit-role">Tools</div>
+      <div class="credit-name">VS2026</div>
+      <div class="credit-detail">Development tooling used during the build process.</div>
+    </div>
+    <div class="credit-card reveal">
+      <div class="credit-role">Asset Conversion</div>
+      <div class="credit-name">xnbcli</div>
+      <div class="credit-detail">Used for XNB asset processing. Thank you to its maker.</div>
+    </div>
+    <div class="credit-card reveal">
+      <div class="credit-role">Community</div>
+      <div class="credit-name">You!</div>
+      <div class="credit-detail">Players, testers, and everyone who helped report bugs and spread the word.</div>
     </div>
   </div>
 </section>
@@ -780,12 +1073,13 @@
     <div class="about-text">
       <p>Download the APK and side-load it on your Android device. You'll need to enable <em>Install from unknown sources</em> in your device settings.</p>
       <p>Requires <em>Android 6.0 (Marshmallow)</em> or later. Tested on phones and tablets. A file manager or adb install also works.</p>
-      <p>You must own a legitimate copy of OneShot or OneShot: World Machine Edition. This port contains no game assets — it requires your own data files.</p>
+      <p>You must own a legitimate copy of OneShot or OneShot: World Machine Edition. Use <em>ResAdder</em> to automatically inject your game's <em>content</em> and <em>gamedata</em> folders into the APK before installing.</p>
     </div>
     <div style="display:flex;flex-direction:column;gap:1rem;align-items:flex-start;">
       <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" target="_blank" class="cta-btn" style="font-size:1.2rem;">⬇ Download APK</a>
       <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--twm-blue);box-shadow:0 0 24px #4ab3d844,inset 0 -3px 0 #1a6080;color:var(--dark);">📋 Setup Guide</a>
-      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:var(--accent);border:1px solid var(--accent);box-shadow:none;">💬 Discord / Bug Reports</a>
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:#e04040;border:1px solid #e04040;box-shadow:none;">🐛 Report a Bug</a>
+      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:var(--accent);border:1px solid var(--accent);box-shadow:none;">💬 Discord</a>
     </div>
   </div>
 </section>
@@ -795,7 +1089,7 @@
   <img src="niko_yum.png" alt="Niko yum" class="niko-yum" />
   <p>OneShot &amp; OneShot: World Machine Edition are property of <a href="https://futurecat.itch.io/" target="_blank">FutureCat</a>.</p>
   <p>This is an unofficial, non-commercial fan port. Not affiliated with or endorsed by the original creators.</p>
-  <p style="margin-top:0.6rem;">Port by <em>Me... NVMe</em> · Made with ☀️</p>
+  <p style="margin-top:0.6rem;">Port by <em>Me... NVMe</em> · v1.0-REL · Compiled 2 April 2026 · Made with ☀️</p>
 </footer>
 
 <script>
