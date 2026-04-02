@@ -12,7 +12,11 @@ CAN are Canary/Beta builds.
 # Credits
 
 FutureCat, developers of OneShot.
+
 You !
+
 Me, NVMe
+
 VS2026
+
 and maker of xnbcli.
