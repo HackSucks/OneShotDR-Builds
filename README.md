@@ -2,7 +2,7 @@
 see the website for info.
 
 or listen to this breakdown:
-OneShotDR is the not so great name i chose for my faithful port of OneShot, speciffically the World Machine Edition (WME) to Android.
+OneShotDR is my faithful port of OneShot, speciffically the World Machine Edition (WME) to Android.
 
 this project is unlike this one: https://oneshotmobile.straw.page/.
 
