@@ -4,674 +4,497 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title>OneShot: World Machine Edition — Android Port</title>
+  <title>OneShot Android Port — Play OneShot WME on Mobile</title>
 
-  <!-- ✅ SEO META -->
-  <meta name="description" content="Unofficial Android port of OneShot: World Machine Edition. Download APK, play with touch controls, and experience the full WME content on mobile." />
-  <meta name="keywords" content="OneShot Android port, OneShot WME APK, OneShot mobile, World Machine Edition Android, OneShot download APK, OneShot fangame Android" />
-  <meta name="author" content="Me, HS" />
+  <meta name="description" content="Download OneShot: World Machine Edition for Android. An unofficial fan port of the OneShot WME PC game — full content, touch controls, no emulator. Free APK sideload." />
+  <meta name="keywords" content="OneShot mobile, OneShot Android, OneShot APK, OneShot World Machine Edition Android, OneShot WME Android port, OneShot download Android, play OneShot on phone, OneShot Android port, OneShotDR" />
+  <meta name="author" content="HackSucks" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://hacksucks.github.io/OneShotDR-Builds/" />
 
-  <!-- ✅ Open Graph (for Discord, Twitter, etc.) -->
-  <meta property="og:title" content="OneShot: World Machine Edition — Android Port" />
-  <meta property="og:description" content="Play OneShot WME on Android. Barely any changes from PC, touch controls, and native performance." />
+  <!-- Open Graph -->
+  <meta property="og:title" content="OneShot Android Port — Play WME on Your Phone" />
+  <meta property="og:description" content="An unofficial Android port of OneShot: World Machine Edition. Full game, touch controls, no emulator needed. Download the APK and sideload it." />
   <meta property="og:image" content="https://hacksucks.github.io/OneShotDR-Builds/512x512.png" />
   <meta property="og:url" content="https://hacksucks.github.io/OneShotDR-Builds/" />
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="OneShot Android Port" />
 
-  <!-- ✅ Twitter Card -->
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="OneShot Android Port" />
-  <meta name="twitter:description" content="Download and play OneShot: World Machine Edition on Android." />
+  <meta name="twitter:title" content="OneShot Android Port — OneShot WME on Mobile" />
+  <meta name="twitter:description" content="Play OneShot: World Machine Edition on Android. Full WME content, touch controls, native APK." />
   <meta name="twitter:image" content="https://hacksucks.github.io/OneShotDR-Builds/512x512.png" />
 
+  <!-- JSON-LD structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OneShot: World Machine Edition — Android Port",
+    "operatingSystem": "Android 6.0+",
+    "applicationCategory": "Game",
+    "description": "An unofficial fan port of OneShot: World Machine Edition for Android. Full WME content including Solstice route and the Barrens, with touch controls. No emulator required.",
+    "url": "https://hacksucks.github.io/OneShotDR-Builds/",
+    "author": {
+      "@type": "Person",
+      "name": "HackSucks"
+    },
+    "softwareVersion": "1.0",
+    "releaseNotes": "Initial stable release based on OneShot WME v1.24.12.4.1",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
+
   <link rel="icon" type="image/png" href="homescreenicon.PNG" />
-  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Bitter:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
   <style>
     :root {
-      --sun: #f5c842;
-      --sun-glow: #f5a623;
-      --dark: #0d0b14;
-      --panel: #13101f;
-      --panel-border: #2a2240;
-      --text: #e8dfc8;
-      --muted: #7a6f8a;
-      --accent: #c97aff;
-      --twm-blue: #4ab3d8;
-      --twm-dark: #0a1a24;
-      --white: #f0eaff;
-      --green: #3dba3d;
-      --canary: #f5a623;
+      --bg:        #0e0c13;
+      --bg-panel:  #16121f;
+      --bg-raise:  #1c1728;
+      --border:    #2e2840;
+      --border-hi: #4a3f68;
+      --text:      #d9cdb8;
+      --text-dim:  #7a6f88;
+      --text-faint:#3e3852;
+      --gold:      #e8a825;
+      --gold-dim:  #b07a18;
+      --gold-glow: rgba(232,168,37,.15);
+      --lavender:  #9b7fc0;
+      --lavender-dim: #5c4a80;
+      --green:     #5aad5a;
+      --amber:     #d4882a;
+      --red:       #cc4444;
+      --blue:      #4a9cc4;
+      --white:     #f0ebff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--dark);
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Bitter', Georgia, serif;
-      cursor: url('mouse_cursor.gif'), auto;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 17px;
+      line-height: 1.8;
       overflow-x: hidden;
     }
 
-    /* ── STARFIELD ── */
-    #stars {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
+    /* ── LAYOUT ── */
+    .wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 1.4rem;
     }
-    #stars span {
-      position: absolute;
-      width: 2px; height: 2px;
-      border-radius: 50%;
-      background: white;
-      animation: twinkle var(--d, 3s) var(--delay, 0s) infinite alternate ease-in-out;
+    .wrap-wide {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 0 1.4rem;
     }
-    @keyframes twinkle { from { opacity: 0.1; } to { opacity: 0.9; } }
+
+    /* ── LINKS ── */
+    a { color: var(--lavender); text-decoration: underline; text-underline-offset: 3px; }
+    a:hover { color: var(--white); }
+
+    /* ── MONOSPACE UTILITY ── */
+    .mono {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82em;
+      letter-spacing: 0;
+    }
+
+    /* ── TOP BAR ── */
+    .topbar {
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 0;
+    }
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .topbar-brand {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      letter-spacing: 0.04em;
+    }
+    .topbar-brand strong { color: var(--gold); font-weight: 700; }
+    .topbar-links {
+      display: flex;
+      gap: 1.4rem;
+      list-style: none;
+    }
+    .topbar-links a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .topbar-links a:hover { color: var(--text); }
 
     /* ── HERO ── */
     .hero {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 1rem 4rem;
+      padding: 5rem 0 4rem;
       text-align: center;
     }
-
-    .sun-orb {
-      width: 140px; height: 140px;
+    .hero-sun {
+      width: 108px;
+      height: 108px;
       border-radius: 50%;
+      margin: 0 auto 2rem;
       overflow: hidden;
-      box-shadow:
-        0 0 40px 12px #f5c84288,
-        0 0 100px 40px #f5a62344,
-        0 0 200px 80px #f5a62311;
-      animation: pulse-sun 4s ease-in-out infinite alternate;
-      margin-bottom: 2.2rem;
-      flex-shrink: 0;
+      box-shadow: 0 0 60px 12px var(--gold-glow), 0 0 0 1px rgba(232,168,37,.2);
     }
-    .sun-orb img {
+    .hero-sun img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
     }
-    @keyframes pulse-sun {
-      from { box-shadow: 0 0 40px 12px #f5c84288, 0 0 100px 40px #f5a62344, 0 0 200px 80px #f5a62311; }
-      to   { box-shadow: 0 0 60px 20px #f5c842cc, 0 0 130px 60px #f5a62366, 0 0 260px 100px #f5a62322; }
+    .hero h1 {
+      font-size: clamp(2rem, 6vw, 3.6rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
     }
-
-    .hero-title {
-      font-family: 'VT323', monospace;
-      font-size: clamp(2.6rem, 9vw, 6rem);
-      letter-spacing: 0.04em;
-      color: var(--sun);
-      text-shadow: 0 0 30px #f5c84299, 0 2px 0 #7a4400;
-      line-height: 1;
-    }
-    .hero-subtitle {
-      font-family: 'VT323', monospace;
-      font-size: clamp(1.1rem, 4vw, 2rem);
-      color: var(--accent);
-      letter-spacing: 0.15em;
-      margin-top: 0.5rem;
-      text-shadow: 0 0 12px #c97aff88;
-    }
-    .hero-tagline {
-      font-size: 1rem;
-      color: var(--muted);
+    .hero h1 span { color: var(--gold); }
+    .hero-sub {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      margin-top: 0.8rem;
       font-style: italic;
-      margin-top: 1.2rem;
-      max-width: 480px;
     }
-
-    .niko-hero {
-      width: min(180px, 42vw);
-      margin-top: 2rem;
+    .hero-niko {
+      width: 130px;
+      margin: 2.2rem auto 0;
+      display: block;
       image-rendering: pixelated;
-      filter: drop-shadow(0 0 18px #f5c84266);
-      animation: float 3.5s ease-in-out infinite alternate;
+      filter: drop-shadow(0 4px 18px rgba(232,168,37,.25));
+      animation: niko-bob 4s ease-in-out infinite alternate;
     }
-    @keyframes float {
-      from { transform: translateY(0); }
-      to   { transform: translateY(-14px); }
+    @keyframes niko-bob {
+      from { transform: translateY(0px); }
+      to   { transform: translateY(-10px); }
     }
 
-    .badge-row {
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 2rem;
-    }
-    .badge {
-      font-family: 'VT323', monospace;
-      font-size: 0.95rem;
-      letter-spacing: 0.08em;
-      padding: 0.3rem 0.85rem;
-      border: 1px solid var(--panel-border);
-      border-radius: 3px;
-      background: var(--panel);
-      color: var(--muted);
-    }
-    .badge.hi { border-color: var(--accent); color: var(--accent); }
-    .badge.ver { border-color: var(--green); color: var(--green); }
-
-    .cta-btn {
-      display: inline-block;
+    .hero-actions {
       margin-top: 2.4rem;
-      padding: 0.85rem 2.4rem;
-      font-family: 'VT323', monospace;
-      font-size: 1.5rem;
-      letter-spacing: 0.12em;
-      color: var(--dark);
-      background: var(--sun);
-      border: none;
-      border-radius: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      letter-spacing: 0.03em;
+      border-radius: 5px;
       text-decoration: none;
-      box-shadow: 0 0 24px #f5c84277, inset 0 -3px 0 #c07000;
-      transition: transform 0.15s, box-shadow 0.15s;
-      cursor: url('mouse_cursor.gif'), pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      cursor: pointer;
+      border: none;
     }
-    .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 40px #f5c84299, inset 0 -3px 0 #c07000;
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      background: var(--gold);
+      color: #0e0c13;
+      font-weight: 700;
+      box-shadow: 0 2px 20px rgba(232,168,37,.3);
     }
-    .cta-sub {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 0.6rem;
+    .btn-primary:hover { background: #f0b830; box-shadow: 0 4px 28px rgba(232,168,37,.45); }
+    .btn-outline {
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border-hi);
     }
+    .btn-outline:hover { color: var(--text); border-color: var(--text-dim); }
+    .btn-ghost-red {
+      background: transparent;
+      color: var(--red);
+      border: 1px solid #5a2020;
+    }
+    .btn-ghost-red:hover { background: #2a0f0f; border-color: var(--red); }
+    .btn-ghost-blue {
+      background: transparent;
+      color: var(--blue);
+      border: 1px solid #1e3d52;
+    }
+    .btn-ghost-blue:hover { background: #0d1f2a; border-color: var(--blue); }
 
-    /* ── SECTION WRAPPER ── */
-    section {
-      position: relative;
-      z-index: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 3rem 1.2rem;
+    /* ── SECTION HEADERS ── */
+    .section {
+      padding: 3.5rem 0;
     }
-
-    .section-label {
-      font-family: 'VT323', monospace;
-      font-size: 0.85rem;
-      letter-spacing: 0.25em;
-      color: var(--accent);
+    .section + .section {
+      border-top: 1px solid var(--border);
+    }
+    .section-eyebrow {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      margin-bottom: 0.4rem;
+      color: var(--lavender);
+      margin-bottom: 0.6rem;
     }
-    .section-title {
-      font-family: 'VT323', monospace;
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      color: var(--sun);
-      text-shadow: 0 0 16px #f5c84244;
+    .section h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.2;
       margin-bottom: 1.4rem;
     }
 
-    /* ── DIVIDER ── */
-    .divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--panel-border), transparent);
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ── ABOUT ── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.4rem;
-      align-items: center;
-    }
-    @media(max-width:620px){ .about-grid { grid-template-columns: 1fr; } }
-
-    .about-text p {
-      line-height: 1.75;
+    /* ── PROSE ── */
+    .prose p {
       color: var(--text);
-      margin-bottom: 0.9rem;
-      font-size: 0.97rem;
+      margin-bottom: 1rem;
     }
-    .about-text p em { color: var(--sun); font-style: normal; }
+    .prose p:last-child { margin-bottom: 0; }
+    .prose em { color: var(--gold); font-style: normal; font-weight: 500; }
+    .prose a { color: var(--lavender); }
 
-    .niko-speak-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.8rem;
-    }
-    .niko-speak {
-      width: min(160px, 38vw);
-      image-rendering: pixelated;
-      filter: drop-shadow(0 0 10px #f5c84244);
-    }
-    .speech-bubble {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 0.75rem 1rem;
-      font-size: 0.88rem;
-      color: var(--text);
-      font-style: italic;
-      position: relative;
-      max-width: 220px;
-      text-align: center;
-    }
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -10px;
-      left: 50%;
-      transform: translateX(-50%);
-      border: 5px solid transparent;
-      border-top-color: var(--panel-border);
-    }
-
-    /* ── VERSION BANNER ── */
-    .version-banner {
-      background: linear-gradient(135deg, #0d1a0d 0%, #0d0b14 60%);
-      border: 1px solid #2a4a2a;
-      border-radius: 8px;
+    /* ── VERSION CARD ── */
+    .version-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      border-radius: 6px;
       padding: 1.4rem 1.6rem;
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem;
+      gap: 1rem;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 2rem;
+      margin-bottom: 1.6rem;
     }
-    .version-main {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-    .version-tag {
-      font-family: 'VT323', monospace;
-      font-size: 2rem;
+    .version-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.6rem;
       color: var(--green);
-      letter-spacing: 0.1em;
-      text-shadow: 0 0 16px #3dba3d88;
+      font-weight: 700;
+      letter-spacing: -0.02em;
     }
     .version-meta {
-      font-size: 0.8rem;
-      color: var(--muted);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
       font-style: italic;
     }
-    .version-pills {
+    .tag-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
-    .vpill {
-      font-family: 'VT323', monospace;
-      font-size: 0.88rem;
-      letter-spacing: 0.08em;
-      padding: 0.25rem 0.7rem;
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
       border-radius: 3px;
-      background: var(--panel);
+      border: 1px solid;
+      letter-spacing: 0.04em;
     }
-    .vpill.green  { border: 1px solid var(--green);  color: var(--green); }
-    .vpill.blue   { border: 1px solid var(--twm-blue); color: var(--twm-blue); }
-    .vpill.purple { border: 1px solid var(--accent);  color: var(--accent); }
-    .vpill.muted  { border: 1px solid var(--panel-border); color: var(--muted); }
+    .tag-green  { border-color: var(--green);   color: var(--green);   background: rgba(90,173,90,.08); }
+    .tag-amber  { border-color: var(--amber);   color: var(--amber);   background: rgba(212,136,42,.08); }
+    .tag-dim    { border-color: var(--border);  color: var(--text-dim); background: transparent; }
+    .tag-blue   { border-color: var(--blue);    color: var(--blue);    background: rgba(74,156,196,.08); }
+    .tag-purple { border-color: var(--lavender-dim); color: var(--lavender); background: transparent; }
 
-    /* Build type legend */
-    .build-legend {
+    /* ── BUILD TYPES ── */
+    .build-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
-      margin-top: 1.4rem;
+      margin-top: 1rem;
     }
-    @media(max-width:520px){ .build-legend { grid-template-columns: 1fr; } }
-    .build-type {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
+    @media (max-width: 540px) { .build-grid { grid-template-columns: 1fr; } }
+    .build-block {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 1rem 1.1rem;
+      padding: 1.1rem 1.2rem;
     }
-    .build-type.rel { border-color: var(--green); }
-    .build-type.can { border-color: var(--canary); }
-    .build-type-label {
-      font-family: 'VT323', monospace;
-      font-size: 1.2rem;
-      letter-spacing: 0.15em;
-      margin-bottom: 0.35rem;
+    .build-block.rel { border-top: 2px solid var(--green); }
+    .build-block.can { border-top: 2px solid var(--amber); }
+    .build-block-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
     }
-    .build-type.rel .build-type-label { color: var(--green); }
-    .build-type.can .build-type-label { color: var(--canary); }
-    .build-type-desc {
-      font-size: 0.83rem;
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    /* ── TWM SHOWCASE ── */
-    .twm-showcase {
-      background: var(--twm-dark);
-      border: 1px solid #1e3a4a;
-      border-radius: 6px;
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-    .twm-titlebar {
-      background: #0f2533;
-      padding: 0.5rem 1rem;
-      font-family: 'VT323', monospace;
-      font-size: 1rem;
-      letter-spacing: 0.1em;
-      color: var(--twm-blue);
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      border-bottom: 1px solid #1e3a4a;
-    }
-    .twm-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--twm-blue); opacity: 0.5; }
-    .twm-screenshot { width: 100%; display: block; }
-
-    /* ── SCREENSHOTS GALLERY ── */
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-    }
-    .gallery-item {
-      border-radius: 6px;
-      overflow: hidden;
-      border: 1px solid var(--panel-border);
-      background: var(--panel);
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .gallery-item:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 32px #f5c84222;
-    }
-    .gallery-item img { width: 100%; display: block; }
-    .gallery-caption {
-      font-family: 'VT323', monospace;
+    .build-block.rel .build-block-title { color: var(--green); }
+    .build-block.can .build-block-title { color: var(--amber); }
+    .build-block p {
       font-size: 0.85rem;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      padding: 0.45rem 0.7rem;
-      text-align: center;
+      color: var(--text-dim);
+      line-height: 1.65;
     }
 
     /* ── FEATURES ── */
-    .features-grid {
+    .features-list {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-    }
-    .feature-card {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 1.2rem 1rem;
-      transition: border-color 0.2s;
+      overflow: hidden;
     }
-    .feature-card:hover { border-color: var(--accent); }
-    .feature-icon {
-      font-size: 1.6rem;
+    .feature-item {
+      background: var(--bg-panel);
+      padding: 1.3rem 1.2rem;
+      transition: background 0.15s;
+    }
+    .feature-item:hover { background: var(--bg-raise); }
+    .feature-item-icon {
+      font-size: 1.3rem;
       margin-bottom: 0.5rem;
+      line-height: 1;
     }
-    .feature-title {
-      font-family: 'VT323', monospace;
-      font-size: 1.1rem;
-      letter-spacing: 0.08em;
-      color: var(--sun);
+    .feature-item-title {
+      font-size: 0.97rem;
+      font-weight: 600;
+      color: var(--white);
       margin-bottom: 0.35rem;
     }
-    .feature-desc {
-      font-size: 0.84rem;
-      color: var(--muted);
+    .feature-item-desc {
+      font-size: 0.83rem;
+      color: var(--text-dim);
       line-height: 1.6;
     }
 
-    /* ── NIKO DIALOGUE STRIP ── */
-    .dialogue-strip {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      padding: 1.4rem 1.6rem;
-      display: flex;
-      align-items: center;
-      gap: 1.4rem;
-    }
-    @media(max-width:500px){ .dialogue-strip { flex-direction: column; text-align: center; } }
-    .dialogue-strip img {
-      width: 80px;
-      image-rendering: pixelated;
-      flex-shrink: 0;
-      filter: drop-shadow(0 0 8px #f5c84255);
-    }
-    .dialogue-strip .lines { flex: 1; }
-    .dialogue-strip .lines p {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      color: var(--text);
-    }
-    .dialogue-strip .lines .speaker {
-      font-family: 'VT323', monospace;
-      font-size: 1rem;
-      letter-spacing: 0.1em;
-      color: var(--sun);
-      margin-bottom: 0.3rem;
-    }
-
-    /* ── RESADDER ── */
-    .resadder-box {
-      background: linear-gradient(135deg, #0a1a24 0%, #0d0b14 100%);
-      border: 1px solid var(--twm-blue);
-      border-radius: 8px;
-      padding: 1.6rem;
-      margin-bottom: 1.6rem;
-    }
-    .resadder-title {
-      font-family: 'VT323', monospace;
-      font-size: 1.4rem;
-      letter-spacing: 0.12em;
-      color: var(--twm-blue);
-      margin-bottom: 0.8rem;
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .resadder-body {
-      font-size: 0.9rem;
-      color: var(--text);
-      line-height: 1.75;
-    }
-    .resadder-body em { color: var(--sun); font-style: normal; }
-    .resadder-body strong { color: var(--twm-blue); }
-    .platform-row {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.9rem;
-    }
-    .plat {
-      font-family: 'VT323', monospace;
-      font-size: 0.88rem;
-      letter-spacing: 0.06em;
-      padding: 0.25rem 0.7rem;
-      border-radius: 3px;
-      border: 1px solid;
-    }
-    .plat.win  { border-color: var(--twm-blue); color: var(--twm-blue); background: #071218; }
-    .plat.soon { border-color: var(--panel-border); color: var(--muted); background: var(--panel); }
-
-    /* ── BUG REPORTS ── */
-    .bug-box {
-      background: #1a0d0d;
-      border: 1px solid #5a2020;
-      border-radius: 8px;
-      padding: 1.4rem 1.6rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 1.2rem;
-    }
-    .bug-icon { font-size: 2rem; flex-shrink: 0; margin-top: 0.1rem; }
-    .bug-body { flex: 1; }
-    .bug-body p { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 0.6rem; }
-    .bug-body p em { color: var(--sun); font-style: normal; }
-    .bug-body a.issue-btn {
-      display: inline-block;
-      font-family: 'VT323', monospace;
-      font-size: 1.1rem;
-      letter-spacing: 0.1em;
-      padding: 0.4rem 1.1rem;
-      border: 1px solid #e04040;
-      border-radius: 4px;
-      color: #e04040;
-      background: #200a0a;
-      text-decoration: none;
-      transition: background 0.15s, color 0.15s;
-    }
-    .bug-body a.issue-btn:hover { background: #e04040; color: var(--dark); }
-
-    /* ── CREDITS ── */
-    .credits-grid {
+    /* ── SCREENSHOTS ── */
+    .shots-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1rem;
     }
-    .credit-card {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 6px;
-      padding: 1.1rem 1rem;
-      transition: border-color 0.2s, transform 0.2s;
+    .shot {
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-panel);
     }
-    .credit-card:hover { border-color: var(--sun); transform: translateY(-3px); }
-    .credit-role {
-      font-family: 'VT323', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.2em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 0.3rem;
-    }
-    .credit-name {
-      font-family: 'VT323', monospace;
-      font-size: 1.25rem;
+    .shot img { width: 100%; display: block; }
+    .shot-cap {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-faint);
+      padding: 0.4rem 0.7rem;
       letter-spacing: 0.06em;
-      color: var(--sun);
-      margin-bottom: 0.3rem;
-    }
-    .credit-detail {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-    .credit-detail a { color: var(--accent); text-decoration: none; }
-
-    /* ── FOOTER ── */
-    footer {
-      position: relative;
-      z-index: 1;
       text-align: center;
-      padding: 2.5rem 1rem;
-      border-top: 1px solid var(--panel-border);
-      color: var(--muted);
-      font-size: 0.8rem;
-      line-height: 1.8;
     }
-    footer a { color: var(--accent); text-decoration: none; }
-    footer .niko-yum {
-      width: 56px;
-      image-rendering: pixelated;
-      margin-bottom: 0.8rem;
-      opacity: 0.85;
+
+    /* ── TWM FRAMES ── */
+    .twm-frame {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      background: #0a1520;
     }
+    .twm-bar {
+      background: #0d1e2c;
+      border-bottom: 1px solid #1e3040;
+      padding: 0.45rem 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .twm-dot-row { display: flex; gap: 5px; }
+    .twm-dot-r { width: 9px; height: 9px; border-radius: 50%; background: #cc4444; }
+    .twm-dot-y { width: 9px; height: 9px; border-radius: 50%; background: #d4882a; }
+    .twm-dot-g { width: 9px; height: 9px; border-radius: 50%; background: #5aad5a; }
+    .twm-bar-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--blue);
+      letter-spacing: 0.08em;
+      margin-left: 0.4rem;
+    }
+    .twm-frame img { width: 100%; display: block; }
 
     /* ── CONTROLS ── */
     .controls-layout {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      align-items: start;
+      gap: 1.2rem;
     }
-    @media(max-width:620px){ .controls-layout { grid-template-columns: 1fr; } }
-
-    .ctrl-group {
-      background: var(--panel);
-      border: 1px solid var(--panel-border);
-      border-radius: 8px;
-      padding: 1.4rem;
+    @media (max-width: 580px) { .controls-layout { grid-template-columns: 1fr; } }
+    .ctrl-panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.2rem;
     }
-    .ctrl-group-title {
-      font-family: 'VT323', monospace;
-      font-size: 1.1rem;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      margin-bottom: 1.2rem;
+    .ctrl-panel-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-    }
-    .ctrl-note {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 0.8rem;
-      font-style: italic;
+      color: var(--lavender);
+      margin-bottom: 1.1rem;
     }
 
-    /* D-pad */
-    .dpad-grid {
+    .dpad {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      gap: 4px;
-      width: 150px;
-      margin: 0 auto;
+      grid-template-columns: 44px 44px 44px;
+      grid-template-rows: 44px 44px 44px;
+      gap: 3px;
+      width: fit-content;
+      margin: 0 auto 0.7rem;
     }
-    .dpad-cell {
-      background: #1e1a30;
-      border: 1px solid var(--panel-border);
+    .dpad-btn {
+      background: var(--bg-raise);
+      border: 1px solid var(--border-hi);
       border-radius: 4px;
-      width: 46px; height: 46px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       gap: 2px;
     }
-    .dpad-center { background: transparent; border-color: transparent; }
-    .dpad-arrow { font-size: 1rem; color: var(--text); line-height: 1; }
-    .dpad-up    { grid-column: 2; grid-row: 1; }
-    .dpad-left  { grid-column: 1; grid-row: 2; }
-    .dpad-center{ grid-column: 2; grid-row: 2; }
-    .dpad-right { grid-column: 3; grid-row: 2; }
-    .dpad-down  { grid-column: 2; grid-row: 3; }
-
-    .key-badge {
-      font-family: 'VT323', monospace;
-      font-size: 0.7rem;
-      background: #0d0b14;
+    .dpad-empty { background: transparent; border: none; }
+    .dpad-arr { font-size: 0.95rem; color: var(--text); line-height: 1; }
+    .keycap {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      background: var(--bg);
       border: 1px solid #3a3060;
-      border-radius: 3px;
-      padding: 0 4px;
-      color: var(--sun);
-      letter-spacing: 0;
-      line-height: 1.4;
+      border-radius: 2px;
+      padding: 0 3px;
+      color: var(--gold);
+      line-height: 1.5;
     }
 
-    /* Face buttons */
-    .face-grid {
+    .face-btns {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      gap: 4px;
-      width: 150px;
+      grid-template-columns: 44px 44px 44px;
+      grid-template-rows: 44px 44px 44px;
+      gap: 3px;
+      width: fit-content;
       margin: 0 auto 1rem;
     }
-    .face-btn {
-      width: 46px; height: 46px;
+    .fbtns-empty { background: transparent; }
+    .fbtn {
       border-radius: 50%;
       display: flex;
       flex-direction: column;
@@ -679,464 +502,680 @@
       justify-content: center;
       gap: 1px;
       border: 2px solid transparent;
-      font-family: 'VT323', monospace;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
     }
-    .face-center { width: 46px; height: 46px; }
-    .btn-label { font-size: 1rem; font-weight: bold; line-height: 1; }
-    .btn-a { background: #1a2e1a; border-color: #3dba3d; color: #3dba3d; }
-    .btn-b { background: #2e1a1a; border-color: #e04040; color: #e04040; }
-    .btn-x { background: #1a1f2e; border-color: #4a7ae0; color: #4a7ae0; }
-    .btn-y { background: #2a2010; border-color: #e0a030; color: #e0a030; }
+    .fbtn-a { background: #152015; border-color: var(--green);   color: var(--green); }
+    .fbtn-b { background: #201515; border-color: var(--red);     color: var(--red); }
+    .fbtn-x { background: #151820; border-color: var(--blue);    color: var(--blue); }
+    .fbtn-y { background: #201a10; border-color: var(--amber);   color: var(--amber); }
 
-    .btn-legend {
+    .btn-map {
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
+      gap: 0.45rem;
     }
-    .legend-row {
+    .btn-map-row {
       display: flex;
       align-items: center;
-      gap: 0.7rem;
+      gap: 0.6rem;
       font-size: 0.84rem;
       color: var(--text);
     }
-    .legend-row span:nth-child(2) { flex: 1; }
-    .face-btn-sm {
-      width: 26px; height: 26px;
+    .btn-map-row .label-name { flex: 1; }
+    .fbtn-sm {
+      width: 24px; height: 24px;
       border-radius: 50%;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      font-family: 'VT323', monospace;
-      font-size: 0.85rem;
-      font-weight: bold;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
       border: 2px solid transparent;
       flex-shrink: 0;
     }
 
-    .rb-row {
+    .shoulder-row {
       display: flex;
       align-items: center;
       gap: 0.7rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.9rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--bg-raise);
+      border: 1px solid var(--border-hi);
+      border-radius: 5px;
     }
-    .rb-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      background: #1e1530;
-      border: 2px solid var(--accent);
-      border-radius: 6px;
-      padding: 0.2rem 0.6rem;
-      font-family: 'VT323', monospace;
-      font-size: 0.95rem;
-      color: var(--accent);
-    }
-    .rb-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      font-style: italic;
-    }
-    .rb-btn-sm {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #1e1530;
-      border: 2px solid var(--accent);
-      border-radius: 4px;
-      padding: 0 5px;
-      font-family: 'VT323', monospace;
+    .shoulder-label {
+      font-family: 'Space Mono', monospace;
       font-size: 0.78rem;
-      color: var(--accent);
-      height: 26px;
-      flex-shrink: 0;
+      color: var(--lavender);
+      font-weight: 700;
+    }
+    .shoulder-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
     }
 
-    /* ── SCROLL REVEAL ── */
+    /* ── RESADDER ── */
+    .resadder-block {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--blue);
+      border-radius: 6px;
+      padding: 1.5rem 1.6rem;
+    }
+    .resadder-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 1rem;
+      color: var(--blue);
+      font-weight: 700;
+      margin-bottom: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .resadder-block .prose p { font-size: 0.9rem; }
+    .platform-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .plat-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .plat-win  { border-color: var(--blue); color: var(--blue); background: rgba(74,156,196,.08); }
+    .plat-soon { border-color: var(--border); color: var(--text-faint); }
+
+    /* ── BUG REPORTS ── */
+    .bug-block {
+      background: #180d0d;
+      border: 1px solid #4a1818;
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+    }
+    .bug-icon { font-size: 1.6rem; flex-shrink: 0; }
+    .bug-text { flex: 1; }
+    .bug-text p { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 0.8rem; }
+    .bug-text em { color: var(--gold); font-style: normal; }
+
+    /* ── CREDITS ── */
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .credit-item {
+      background: var(--bg-panel);
+      padding: 1.1rem 1rem;
+    }
+    .credit-role {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      margin-bottom: 0.3rem;
+    }
+    .credit-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.3rem;
+    }
+    .credit-detail {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* ── NIKO DIALOGUE ── */
+    .niko-dialogue {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.2rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.4rem;
+    }
+    @media (max-width: 480px) {
+      .niko-dialogue { flex-direction: column; align-items: center; text-align: center; }
+    }
+    .niko-dialogue img {
+      width: 70px;
+      image-rendering: pixelated;
+      flex-shrink: 0;
+      filter: drop-shadow(0 0 8px rgba(232,168,37,.2));
+    }
+    .dialogue-text .speaker-name {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.04em;
+    }
+    .dialogue-text p {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 0 3rem;
+      text-align: center;
+    }
+    .footer-niko {
+      width: 48px;
+      image-rendering: pixelated;
+      display: block;
+      margin: 0 auto 1rem;
+      opacity: 0.7;
+    }
+    footer p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.9;
+    }
+    footer a { color: var(--lavender); text-decoration: none; }
+    footer a:hover { color: var(--white); }
+    footer .disclaimer {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--text-faint);
+    }
+
+    /* ── SMALL UTILS ── */
+    .note {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-top: 0.6rem;
+    }
+    .spacer { height: 1.2rem; }
+
+    /* ── REVEAL ANIMATION ── */
     .reveal {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(18px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
+    .reveal.in { opacity: 1; transform: none; }
+
+    @media (max-width: 540px) {
+      body { font-size: 16px; }
+      .hero { padding: 3rem 0 2.5rem; }
+      .section { padding: 2.5rem 0; }
+      .topbar-links { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- Starfield -->
-<div id="stars"></div>
-
-<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
-<div class="hero">
-  <div class="sun-orb"><img src="512x512.png" alt="The Sun" /></div>
-  <h1 class="hero-title">OneShot</h1>
-  <p class="hero-subtitle">World Machine Edition</p>
-  <p class="hero-tagline">An unofficial Android port — carry the light wherever you go.</p>
-  <img src="niko.png" alt="Niko holding the sun" class="niko-hero" />
-  <div class="badge-row">
-    <span class="badge hi">Android Port</span>
-    <span class="badge">Fangame</span>
-    <span class="badge">Non-commercial</span>
-    <span class="badge">WME Content</span>
-    <span class="badge ver">v1.0-REL</span>
+<!-- ═══ TOP BAR ═══ -->
+<header class="topbar">
+  <div class="wrap-wide topbar-inner">
+    <div class="topbar-brand"><strong>OneShot</strong> · Android Port</div>
+    <nav aria-label="Page navigation">
+      <ul class="topbar-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#controls">Controls</a></li>
+        <li><a href="#download">Download</a></li>
+        <li><a href="https://github.com/HackSucks/OneShotDR-Builds" target="_blank" rel="noopener">GitHub ↗</a></li>
+      </ul>
+    </nav>
   </div>
-  <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" class="cta-btn">▶ Download APK</a>
-  <p class="cta-sub">Side-load required · Android 6.0+</p>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<main>
+<div class="wrap">
+  <section class="hero" id="top">
+    <div class="hero-sun" aria-hidden="true">
+      <img src="512x512.png" alt="The Sun from OneShot" loading="eager" />
+    </div>
+
+    <h1>OneShot<span>: World Machine Edition</span><br>on Android</h1>
+    <p class="hero-sub">An unofficial fan port — carry the light with you.</p>
+
+    <img src="niko.png" alt="Niko holding the sun" class="hero-niko" />
+
+    <div class="hero-actions">
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" class="btn btn-primary">⬇ Download APK</a>
+      <a href="#setup" class="btn btn-outline">Setup Guide</a>
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" class="btn btn-ghost-red" target="_blank" rel="noopener">🐛 Report a Bug</a>
+    </div>
+    <p class="note" style="margin-top:1.2rem;">Android 6.0+ · Sideload required · Non-commercial fan port</p>
+  </section>
 </div>
 
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ ABOUT ═══════════════════════════════ -->
-<section>
-  <div class="section-label">About the port</div>
-  <h2 class="section-title">What is this?</h2>
-  <div class="about-grid reveal">
-    <div class="about-text">
-      <p><em>OneShot: World Machine Edition</em> is the expanded re-release of the cult RPG by <em>FutureCat</em>, featuring Niko, a child tasked with restoring the sun to a dying world — a world that knows you exist.</p>
-      <p>This is an <em>unofficial fan port</em> that brings the full World Machine Edition experience to Android, including the Solstice route, the Barrens, and all WME-exclusive areas — touch-optimised, no emulator needed.</p>
-      <p>OneShot and all related content belong to <em>FutureCat</em>. This port is <em>non-commercial and made out of love.</em></p>
+<!-- ═══ ABOUT ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="about">
+    <p class="section-eyebrow">What is this?</p>
+    <h2>OneShot on your phone</h2>
+    <div class="prose reveal">
+      <p>
+        <em>OneShot: World Machine Edition</em> is the expanded re-release of the cult RPG by FutureCat — a quiet, strange game about Niko, a small child carrying a lightbulb sun through a world on the edge of dying out. A world that, notably, knows you're there.
+      </p>
+      <p>
+        This is an <em>unofficial fan port</em> that brings the full WME experience to Android. No emulator, no wrapper app, no RetroArch setup — just an APK you install and play. It includes all World Machine Edition content: the Solstice route, the Barrens, all WME-exclusive areas, and the original soundtrack.
+      </p>
+      <p>
+        OneShot and all related assets belong to <em>FutureCat</em>. This port is made out of love, not for money. If you haven't played OneShot yet, <a href="https://store.steampowered.com/app/420530/OneShot/" target="_blank" rel="noopener">buy it on Steam first</a> — it's worth it.
+      </p>
     </div>
-    <div class="niko-speak-wrap">
-      <div class="speech-bubble">Do you think… the sun will make it home okay?</div>
-      <img src="niko_speak.png" alt="Niko speaking" class="niko-speak" />
-    </div>
-  </div>
-</section>
 
-<div class="divider"></div>
+    <div class="spacer"></div>
 
-<!-- ═══════════════════════════════ VERSION ════════════════════════════ -->
-<section>
-  <div class="section-label">Release info</div>
-  <h2 class="section-title">Version</h2>
-
-  <div class="version-banner reveal">
-    <div class="version-main">
-      <div class="version-tag">v1.0-REL</div>
-      <div class="version-meta">Compiled 2 April 2026 · Based on OneShot WME v1.24.12.4.1</div>
-    </div>
-    <div class="version-pills">
-      <span class="vpill green">Stable Release</span>
-      <span class="vpill muted">WME v1.24.12.4.1</span>
-    </div>
-  </div>
-
-  <div class="build-legend reveal">
-    <div class="build-type rel">
-      <div class="build-type-label">REL — Release</div>
-      <div class="build-type-desc">Stable builds intended for general use. Thoroughly tested before publishing. This is what you want unless you're helping test new features.</div>
-    </div>
-    <div class="build-type can">
-      <div class="build-type-label">CAN — Canary / Beta</div>
-      <div class="build-type-desc">Early-access builds with new features that may not be fully stable. Expect rough edges. Great for testers, but save often.</div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ RESADDER ═══════════════════════════ -->
-<section>
-  <div class="section-label">Setup tool</div>
-  <h2 class="section-title">ResAdder</h2>
-
-  <div class="resadder-box reveal">
-    <div class="resadder-title">⚙ ResAdder <span style="font-size:1rem;color:var(--muted);letter-spacing:0.05em;">v1.0</span></div>
-    <div class="resadder-body">
-      <p>ResAdder automatically adds your game resources to the APK — no manual file copying required. Place your game files and the APK in the same folder as the extracted ResAdder zip, run it, and it handles the rest.</p>
-      <p>You'll need a <em>Windows, Linux, or macOS</em> build of OneShot WME. Specifically, the <em>content</em> and <em>gamedata</em> folders from your copy of the game, plus the downloaded APK, must all sit in the same directory as the extracted ResAdder tool.</p>
-      <p><strong>Note:</strong> The Windows build of ResAdder is available now. <em>Linux and macOS builds are coming soon.</em></p>
-      <div class="platform-row">
-        <span class="plat win">✔ Windows</span>
-        <span class="plat soon">⏳ Linux — soon</span>
-        <span class="plat soon">⏳ macOS — soon</span>
+    <div class="niko-dialogue reveal">
+      <img src="niko_speak.png" alt="Niko" />
+      <div class="dialogue-text">
+        <div class="speaker-name">Niko</div>
+        <p>Do you think… the sun will make it home okay?</p>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
+</div>
 
-<div class="divider"></div>
+<!-- ═══ VERSION ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="version">
+    <p class="section-eyebrow">Current Release</p>
+    <h2>Version info</h2>
 
-<!-- ═══════════════════════════════ BUG REPORTS ════════════════════════ -->
-<section>
-  <div class="section-label">Something broken?</div>
-  <h2 class="section-title">Bug Reports</h2>
-  <div class="bug-box reveal">
-    <div class="bug-icon">🐛</div>
-    <div class="bug-body">
-      <p>All bugs should be reported as a GitHub <em>Issue</em>. This keeps everything organised so they can be tracked and fixed efficiently. Please include your Android version, a description of what happened, and steps to reproduce if possible.</p>
-      <p>Do <em>not</em> report bugs in Discord messages or comments — open an Issue so nothing gets lost.</p>
-      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" class="issue-btn">⚠ Open an Issue on GitHub</a>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ TWM SHOWCASE ════════════════════════ -->
-<section>
-  <div class="section-label">In-game system</div>
-  <h2 class="section-title">The World Machine</h2>
-  <div class="twm-showcase reveal">
-    <div class="twm-titlebar">
-      <span class="twm-dot"></span>
-      <span>WORLD MACHINE — BOOT SEQUENCE</span>
-    </div>
-    <img src="twmbootup.PNG" alt="World Machine boot screen" class="twm-screenshot" />
-  </div>
-  <div class="twm-showcase reveal">
-    <div class="twm-titlebar">
-      <span class="twm-dot"></span>
-      <span>WORLD MACHINE — DESKTOP</span>
-    </div>
-    <img src="twmdesktop.PNG" alt="World Machine desktop" class="twm-screenshot" />
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ SCREENSHOTS ════════════════════════ -->
-<section>
-  <div class="section-label">Gameplay</div>
-  <h2 class="section-title">Screenshots</h2>
-  <div class="gallery reveal">
-    <div class="gallery-item">
-      <img src="gameplay1.PNG" alt="Gameplay screenshot 1" />
-      <div class="gallery-caption">[ GAMEPLAY · 01 ]</div>
-    </div>
-    <div class="gallery-item">
-      <img src="gameplay2.PNG" alt="Gameplay screenshot 2" />
-      <div class="gallery-caption">[ GAMEPLAY · 02 ]</div>
-    </div>
-    <div class="gallery-item">
-      <img src="gameplay3.PNG" alt="Gameplay screenshot 3" />
-      <div class="gallery-caption">[ GAMEPLAY · 03 ]</div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ FEATURES ════════════════════════════ -->
-<section>
-  <div class="section-label">Port features</div>
-  <h2 class="section-title">What's included</h2>
-  <div class="features-grid">
-    <div class="feature-card reveal">
-      <div class="feature-icon">☀️</div>
-      <div class="feature-title">Full WME Content</div>
-      <div class="feature-desc">All World Machine Edition areas, routes, and secrets — Solstice, Barrens, and beyond.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">🎮</div>
-      <div class="feature-title">Touch Controls</div>
-      <div class="feature-desc">On-screen D-pad + face buttons. Full layout detailed in the Controls section below.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">💾</div>
-      <div class="feature-title">Local Saves</div>
-      <div class="feature-desc">Save files stored locally on your device. Back them up anytime via your file manager.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">🖥️</div>
-      <div class="feature-title">World Machine UI</div>
-      <div class="feature-desc">The in-game desktop experience faithfully adapted for mobile screen sizes.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">🎵</div>
-      <div class="feature-title">Original Soundtrack</div>
-      <div class="feature-desc">Every track from the original game plays in full, including WME additions.</div>
-    </div>
-    <div class="feature-card reveal">
-      <div class="feature-icon">🔦</div>
-      <div class="feature-title">No Emulator</div>
-      <div class="feature-desc">Native APK — no RetroArch, no Joiplay, no setup hassle. Just install and play.</div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ═══════════════════════════════ CONTROLS ════════════════════════════ -->
-<section>
-  <div class="section-label">Input mapping</div>
-  <h2 class="section-title">Controls</h2>
-  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:1.6rem;">The on-screen touch overlay maps to keyboard inputs under the hood. Physical / Bluetooth controllers that send keyboard events will also work.</p>
-
-  <div class="controls-layout reveal">
-
-    <!-- D-pad -->
-    <div class="ctrl-group">
-      <div class="ctrl-group-title">D-Pad</div>
-      <div class="dpad-grid">
-        <div class="dpad-cell dpad-up">
-          <span class="dpad-arrow">▲</span>
-          <span class="key-badge">↑</span>
-        </div>
-        <div class="dpad-cell dpad-left">
-          <span class="dpad-arrow">◀</span>
-          <span class="key-badge">←</span>
-        </div>
-        <div class="dpad-cell dpad-center"></div>
-        <div class="dpad-cell dpad-right">
-          <span class="dpad-arrow">▶</span>
-          <span class="key-badge">→</span>
-        </div>
-        <div class="dpad-cell dpad-down">
-          <span class="dpad-arrow">▼</span>
-          <span class="key-badge">↓</span>
-        </div>
+    <div class="version-card reveal">
+      <div>
+        <div class="version-num">v1.0-REL</div>
+        <div class="version-meta">Compiled 2 April 2026 · Based on OneShot WME v1.24.12.4.1</div>
       </div>
-      <p class="ctrl-note">Each direction sends the corresponding Arrow key.</p>
-    </div>
-
-    <!-- Face buttons -->
-    <div class="ctrl-group">
-      <div class="ctrl-group-title">Face Buttons</div>
-      <div class="rb-row">
-        <div class="rb-btn">
-          <span class="btn-label">RB</span>
-          <span class="key-badge">LShift</span>
-      </div>
-      <div class="face-grid">
-        <div></div>
-        <div class="face-btn btn-y">
-          <span class="btn-label">Y</span>
-          <span class="key-badge">S</span>
-        </div>
-        <div></div>
-        <div class="face-btn btn-x">
-          <span class="btn-label">X</span>
-          <span class="key-badge">A</span>
-        </div>
-        <div class="face-center"></div>
-        <div class="face-btn btn-b">
-          <span class="btn-label">B</span>
-          <span class="key-badge">X</span>
-        </div>
-        <div></div>
-        <div class="face-btn btn-a">
-          <span class="btn-label">A</span>
-          <span class="key-badge">Z</span>
-        </div>
-        <div></div>
-      </div>
-      <div class="btn-legend">
-        <div class="legend-row"><span class="face-btn-sm btn-a">A</span><span>Confirm / Interact</span><span class="key-badge">Z</span></div>
-        <div class="legend-row"><span class="face-btn-sm btn-b">B</span><span>Cancel / Back</span><span class="key-badge">X</span></div>
-        <div class="legend-row"><span class="face-btn-sm btn-x">X</span><span>Menu / Action</span><span class="key-badge">A</span></div>
-        <div class="legend-row"><span class="face-btn-sm btn-y">Y</span><span>Secondary Action</span><span class="key-badge">S</span></div>
-        <div class="legend-row"><span class="rb-btn-sm">RB</span><span>Slow Walk</span><span class="key-badge">LShift</span></div>
+      <div class="tag-row">
+        <span class="tag tag-green">Stable</span>
+        <span class="tag tag-dim">WME v1.24.12.4.1</span>
+        <span class="tag tag-dim">Android 6.0+</span>
       </div>
     </div>
 
-  </div>
-</section>
+    <div class="build-grid reveal">
+      <div class="build-block rel">
+        <div class="build-block-title">REL — Release</div>
+        <p>Stable builds for general use. Tested before publishing. Unless you're helping with testing, this is what you want.</p>
+      </div>
+      <div class="build-block can">
+        <div class="build-block-title">CAN — Canary</div>
+        <p>Early-access builds with new features that may not be fully stable yet. Great for testers. Save often.</p>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
 
-<section>
-  <div class="dialogue-strip reveal">
-    <img src="niko_surprised.png" alt="Niko surprised" />
-    <div class="lines">
-      <div class="speaker">Niko</div>
-      <p>Oh! You can play on your phone now?<br>That means… you can take the sun with you everywhere! That's amazing!</p>
-    </div>
-  </div>
-</section>
+<!-- ═══ SETUP / RESADDER ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="setup">
+    <p class="section-eyebrow">Getting started</p>
+    <h2>Setup &amp; ResAdder</h2>
 
-<div class="divider"></div>
+    <div class="prose reveal" style="margin-bottom:1.4rem;">
+      <p>
+        You'll need a legitimate copy of OneShot or OneShot: World Machine Edition on Windows, Linux, or macOS. The port doesn't bundle game assets — you supply them from your own copy.
+      </p>
+    </div>
 
-<!-- ═══════════════════════════════ CREDITS ════════════════════════════ -->
-<section>
-  <div class="section-label">Made possible by</div>
-  <h2 class="section-title">Credits</h2>
-  <div class="credits-grid">
-    <div class="credit-card reveal">
-      <div class="credit-role">Original Game</div>
-      <div class="credit-name">FutureCat</div>
-      <div class="credit-detail">Developers of OneShot and OneShot: World Machine Edition. <a href="https://futurecat.itch.io/" target="_blank">futurecat.itch.io</a></div>
+    <div class="resadder-block reveal">
+      <div class="resadder-title">⚙ ResAdder <span style="font-size:0.8rem;color:var(--text-dim);font-weight:400;margin-left:0.3rem;">v1.0</span></div>
+      <div class="prose">
+        <p>
+          ResAdder packages your game files into the APK automatically. Put your <em>content</em> and <em>gamedata</em> folders (from your PC copy of the game) and the downloaded APK in the same folder as the extracted ResAdder tool, then run it. It handles everything else — no manual file copying.
+        </p>
+        <p>
+          Once ResAdder finishes, you'll have a ready-to-install APK with your game files baked in. Transfer it to your device and sideload it.
+        </p>
+      </div>
+      <div class="platform-badges">
+        <span class="plat-badge plat-win">✔ Windows</span>
+        <span class="plat-badge plat-soon">⏳ Linux — coming soon</span>
+        <span class="plat-badge plat-soon">⏳ macOS — coming soon</span>
+      </div>
     </div>
-    <div class="credit-card reveal">
-      <div class="credit-role">Android Port</div>
-      <div class="credit-name">Me, NVMe</div>
-      <div class="credit-detail">Port developer. Brought OneShot to Android with touch controls and ResAdder.</div>
-    </div>
-    <div class="credit-card reveal">
-      <div class="credit-role">Tools</div>
-      <div class="credit-name">VS2026</div>
-      <div class="credit-detail">Development tooling used during the build process.</div>
-    </div>
-    <div class="credit-card reveal">
-      <div class="credit-role">Asset Conversion</div>
-      <div class="credit-name">xnbcli</div>
-      <div class="credit-detail">Used for XNB asset processing. Thank you to its maker.</div>
-    </div>
-    <div class="credit-card reveal">
-      <div class="credit-role">Community</div>
-      <div class="credit-name">You!</div>
-      <div class="credit-detail">Players, testers, and everyone who helped report bugs and spread the word.</div>
-    </div>
-  </div>
-</section>
 
-<div class="divider"></div>
+    <p class="note" style="margin-top:1rem;">Enable <em>Install from unknown sources</em> in your Android settings before sideloading. adb install also works.</p>
+  </section>
+</div>
+</div>
 
-<!-- ═══════════════════════════════ DOWNLOAD ═══════════════════════════ -->
-<section id="download">
-  <div class="section-label">Get the game</div>
-  <h2 class="section-title">Download</h2>
-  <div class="about-grid reveal">
-    <div class="about-text">
-      <p>Download the APK and side-load it on your Android device. You'll need to enable <em>Install from unknown sources</em> in your device settings.</p>
-      <p>Requires <em>Android 6.0 (Marshmallow)</em> or later. Tested on phones and tablets. A file manager or adb install also works.</p>
-      <p>You must own a legitimate copy of OneShot or OneShot: World Machine Edition. Use <em>ResAdder</em> to automatically inject your game's <em>content</em> and <em>gamedata</em> folders into the APK before installing.</p>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:1rem;align-items:flex-start;">
-      <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" target="_blank" class="cta-btn" style="font-size:1.2rem;">⬇ Download APK</a>
-      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--twm-blue);box-shadow:0 0 24px #4ab3d844,inset 0 -3px 0 #1a6080;color:var(--dark);">📋 Setup Guide</a>
-      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:#e04040;border:1px solid #e04040;box-shadow:none;">🐛 Report a Bug</a>
-      <a href="#" class="cta-btn" style="font-size:1.2rem;background:var(--panel);color:var(--accent);border:1px solid var(--accent);box-shadow:none;">💬 Discord</a>
-    </div>
-  </div>
-</section>
+<!-- ═══ FEATURES ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="features">
+    <p class="section-eyebrow">What's in the port</p>
+    <h2>Features</h2>
 
-<!-- ═══════════════════════════════ FOOTER ════════════════════════════ -->
+    <div class="features-list reveal">
+      <div class="feature-item">
+        <div class="feature-item-icon">☀️</div>
+        <div class="feature-item-title">Full WME Content</div>
+        <div class="feature-item-desc">Every area, route, and secret from World Machine Edition — Solstice, the Barrens, all of it.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">🎮</div>
+        <div class="feature-item-title">Touch Controls</div>
+        <div class="feature-item-desc">On-screen D-pad and face buttons. Physical Bluetooth controllers that send keyboard events also work.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">💾</div>
+        <div class="feature-item-title">Local Saves</div>
+        <div class="feature-item-desc">Save files are stored on your device. Back them up anytime with a file manager.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">🖥️</div>
+        <div class="feature-item-title">World Machine UI</div>
+        <div class="feature-item-desc">The in-game desktop experience adapted for mobile screen sizes.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">🎵</div>
+        <div class="feature-item-title">Original Soundtrack</div>
+        <div class="feature-item-desc">Every track plays in full, including WME additions. No missing music.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-item-icon">📦</div>
+        <div class="feature-item-title">Native APK</div>
+        <div class="feature-item-desc">No RetroArch, no Joiplay, no wrapper. Install and play directly.</div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ THE WORLD MACHINE ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="worldmachine">
+    <p class="section-eyebrow">In-game system</p>
+    <h2>The World Machine</h2>
+
+    <div class="reveal">
+      <div class="twm-frame">
+        <div class="twm-bar">
+          <div class="twm-dot-row">
+            <div class="twm-dot-r"></div>
+            <div class="twm-dot-y"></div>
+            <div class="twm-dot-g"></div>
+          </div>
+          <span class="twm-bar-label">WORLD MACHINE — BOOT SEQUENCE</span>
+        </div>
+        <img src="twmbootup.PNG" alt="The World Machine boot screen as shown in the OneShot Android port" loading="lazy" />
+      </div>
+
+      <div class="twm-frame">
+        <div class="twm-bar">
+          <div class="twm-dot-row">
+            <div class="twm-dot-r"></div>
+            <div class="twm-dot-y"></div>
+            <div class="twm-dot-g"></div>
+          </div>
+          <span class="twm-bar-label">WORLD MACHINE — DESKTOP</span>
+        </div>
+        <img src="twmdesktop.PNG" alt="The World Machine desktop as shown in the OneShot Android port" loading="lazy" />
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ SCREENSHOTS ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="screenshots">
+    <p class="section-eyebrow">Gameplay</p>
+    <h2>Screenshots</h2>
+    <div class="shots-grid reveal">
+      <div class="shot">
+        <img src="gameplay1.PNG" alt="OneShot Android gameplay screenshot — Niko exploring" loading="lazy" />
+        <div class="shot-cap">gameplay · 01</div>
+      </div>
+      <div class="shot">
+        <img src="gameplay2.PNG" alt="OneShot Android gameplay screenshot" loading="lazy" />
+        <div class="shot-cap">gameplay · 02</div>
+      </div>
+      <div class="shot">
+        <img src="gameplay3.PNG" alt="OneShot Android gameplay screenshot" loading="lazy" />
+        <div class="shot-cap">gameplay · 03</div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ CONTROLS ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="controls">
+    <p class="section-eyebrow">Input mapping</p>
+    <h2>Controls</h2>
+    <p class="prose" style="margin-bottom:1.4rem;font-size:0.9rem;color:var(--text-dim);">
+      The touch overlay sends standard keyboard inputs under the hood, so Bluetooth controllers that emit keyboard events will work too.
+    </p>
+
+    <div class="controls-layout reveal">
+      <!-- D-pad -->
+      <div class="ctrl-panel">
+        <div class="ctrl-panel-title">D-Pad</div>
+        <div class="dpad">
+          <div></div>
+          <div class="dpad-btn" aria-label="Up arrow">
+            <span class="dpad-arr">▲</span>
+            <span class="keycap">↑</span>
+          </div>
+          <div></div>
+          <div class="dpad-btn" aria-label="Left arrow">
+            <span class="dpad-arr">◀</span>
+            <span class="keycap">←</span>
+          </div>
+          <div></div>
+          <div class="dpad-btn" aria-label="Right arrow">
+            <span class="dpad-arr">▶</span>
+            <span class="keycap">→</span>
+          </div>
+          <div></div>
+          <div class="dpad-btn" aria-label="Down arrow">
+            <span class="dpad-arr">▼</span>
+            <span class="keycap">↓</span>
+          </div>
+          <div></div>
+        </div>
+        <p class="note" style="text-align:center;">Each direction → corresponding arrow key</p>
+      </div>
+
+      <!-- Face buttons -->
+      <div class="ctrl-panel">
+        <div class="ctrl-panel-title">Face Buttons</div>
+
+        <div class="shoulder-row">
+          <span class="shoulder-label">RB</span>
+          <span class="keycap" style="font-size:0.7rem;">LShift</span>
+          <span class="shoulder-desc" style="margin-left:0.3rem;">Slow Walk</span>
+        </div>
+
+        <div class="face-btns">
+          <div></div>
+          <div class="fbtn fbtn-y"><span>Y</span><span class="keycap">S</span></div>
+          <div></div>
+          <div class="fbtn fbtn-x"><span>X</span><span class="keycap">A</span></div>
+          <div></div>
+          <div class="fbtn fbtn-b"><span>B</span><span class="keycap">X</span></div>
+          <div></div>
+          <div class="fbtn fbtn-a"><span>A</span><span class="keycap">Z</span></div>
+          <div></div>
+        </div>
+
+        <div class="btn-map">
+          <div class="btn-map-row">
+            <span class="fbtn-sm fbtn-a">A</span>
+            <span class="label-name">Confirm / Interact</span>
+            <span class="keycap">Z</span>
+          </div>
+          <div class="btn-map-row">
+            <span class="fbtn-sm fbtn-b">B</span>
+            <span class="label-name">Cancel / Back</span>
+            <span class="keycap">X</span>
+          </div>
+          <div class="btn-map-row">
+            <span class="fbtn-sm fbtn-x">X</span>
+            <span class="label-name">Menu / Action</span>
+            <span class="keycap">A</span>
+          </div>
+          <div class="btn-map-row">
+            <span class="fbtn-sm fbtn-y">Y</span>
+            <span class="label-name">Secondary Action</span>
+            <span class="keycap">S</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="niko-dialogue reveal">
+      <img src="niko_surprised.png" alt="Niko surprised" />
+      <div class="dialogue-text">
+        <div class="speaker-name">Niko</div>
+        <p>Oh! You can play on your phone now? That means you can take the sun with you everywhere. That's amazing!</p>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ BUG REPORTS ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="bugs">
+    <p class="section-eyebrow">Something wrong?</p>
+    <h2>Bug Reports</h2>
+    <div class="bug-block reveal">
+      <div class="bug-icon">🐛</div>
+      <div class="bug-text">
+        <p>
+          Please report bugs as a GitHub <em>Issue</em> — it keeps things trackable. Include your Android version, what happened, and how to reproduce it if you can.
+        </p>
+        <p style="margin-bottom:0;">
+          Don't report bugs in Discord or comments. Open an Issue so nothing gets lost.
+        </p>
+        <div style="margin-top:0.9rem;">
+          <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" rel="noopener" class="btn btn-ghost-red">⚠ Open an Issue on GitHub</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ CREDITS ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="credits">
+    <p class="section-eyebrow">Made possible by</p>
+    <h2>Credits</h2>
+    <div class="credits-grid reveal">
+      <div class="credit-item">
+        <div class="credit-role">Original Game</div>
+        <div class="credit-name">FutureCat</div>
+        <div class="credit-detail">Developers of OneShot and OneShot: World Machine Edition. <a href="https://futurecat.itch.io/" target="_blank" rel="noopener">futurecat.itch.io</a></div>
+      </div>
+      <div class="credit-item">
+        <div class="credit-role">Android Port</div>
+        <div class="credit-name">Me, NVMe</div>
+        <div class="credit-detail">Port developer. Touch controls, ResAdder, and everything else that makes this work on Android.</div>
+      </div>
+      <div class="credit-item">
+        <div class="credit-role">Dev Tooling</div>
+        <div class="credit-name">VS2026</div>
+        <div class="credit-detail">Development tooling used during the build process.</div>
+      </div>
+      <div class="credit-item">
+        <div class="credit-role">Asset Processing</div>
+        <div class="credit-name">xnbcli</div>
+        <div class="credit-detail">Used for XNB asset processing and conversion.</div>
+      </div>
+      <div class="credit-item">
+        <div class="credit-role">Community</div>
+        <div class="credit-name">You</div>
+        <div class="credit-detail">Players, testers, and everyone who reported bugs or spread the word.</div>
+      </div>
+    </div>
+  </section>
+</div>
+</div>
+
+<!-- ═══ DOWNLOAD ═══ -->
+<div style="border-top:1px solid var(--border);">
+<div class="wrap">
+  <section class="section" id="download">
+    <p class="section-eyebrow">Get the game</p>
+    <h2>Download</h2>
+    <div class="prose reveal" style="margin-bottom:1.6rem;">
+      <p>
+        Grab the APK from GitHub Releases and sideload it. You'll need to have <em>Install from unknown sources</em> enabled — this varies by Android version and manufacturer, but it's usually under Security settings or in your browser/file manager's permissions.
+      </p>
+      <p>
+        Requires <em>Android 6.0 (Marshmallow)</em> or later. Run <em>ResAdder</em> first to inject your game files into the APK before installing.
+      </p>
+    </div>
+    <div class="reveal" style="display:flex;flex-wrap:wrap;gap:0.75rem;">
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/releases" target="_blank" rel="noopener" class="btn btn-primary">⬇ Download APK</a>
+      <a href="#setup" class="btn btn-ghost-blue">⚙ Setup Guide</a>
+      <a href="https://github.com/HackSucks/OneShotDR-Builds/issues" target="_blank" rel="noopener" class="btn btn-ghost-red">🐛 Report a Bug</a>
+    </div>
+  </section>
+</div>
+</div>
+</main>
+
+<!-- ═══ FOOTER ═══ -->
 <footer>
-  <img src="niko_yum.png" alt="Niko yum" class="niko-yum" />
-  <p>OneShot &amp; OneShot: World Machine Edition are property of <a href="https://futurecat.itch.io/" target="_blank">FutureCat</a>.</p>
-  <p>This is an unofficial, non-commercial fan port. Not affiliated with or endorsed by the original creators.</p>
-  <p style="margin-top:0.6rem;">Port by <em>Me... HackSucks :3</em> · v1.0-REL · Compiled 2 April 2026 · Made with <3</p>
+  <div class="wrap">
+    <img src="niko_yum.png" alt="" class="footer-niko" aria-hidden="true" />
+    <p>OneShot &amp; OneShot: World Machine Edition are property of <a href="https://futurecat.itch.io/" target="_blank" rel="noopener">FutureCat</a>.</p>
+    <p>This is an unofficial, non-commercial fan port. Not affiliated with or endorsed by FutureCat.</p>
+    <div class="disclaimer">
+      <p>Port by HackSucks · v1.0-REL · April 2026</p>
+    </div>
+  </div>
 </footer>
 
 <script>
-  // ── Starfield ──
-  const stars = document.getElementById('stars');
-  for (let i = 0; i < 140; i++) {
-    const s = document.createElement('span');
-    s.style.left = Math.random() * 100 + '%';
-    s.style.top  = Math.random() * 100 + '%';
-    const sz = Math.random() * 2.5 + 0.5;
-    s.style.width = sz + 'px';
-    s.style.height = sz + 'px';
-    s.style.setProperty('--d', (Math.random() * 4 + 2) + 's');
-    s.style.setProperty('--delay', (Math.random() * 5) + 's');
-    stars.appendChild(s);
-  }
-
-  // ── Scroll reveal ──
-  const observer = new IntersectionObserver(entries => {
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     });
-  }, { threshold: 0.12 });
-
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 </script>
+
 </body>
 </html>
