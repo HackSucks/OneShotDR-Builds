@@ -24,14 +24,14 @@ bugs are inevitable, so i would appreciate if you reported them so i can get the
 
 
 UNFIXABLE ISSUES: 
-running the port in BlueStacks will result in no audio. this appears to maybe be a bug in BlueStacks itself. in AVD and real hardware, audio should work fine.
+not known.
 
 
 the current *Canary* release is:
 1.1-CAN.
 
 the current *Release* build is:
-1.0-REL.
+1.1-REL.
 
 
  
