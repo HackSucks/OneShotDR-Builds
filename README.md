@@ -23,15 +23,17 @@ to make the game, function. you need to create a folder, put the 'content' and '
 bugs are inevitable, so i would appreciate if you reported them so i can get them fixed as fast as possible. im also playtesting the game myself to fix any bugs.
 
 
-UNFIXABLE ISSUES: 
-not known.
+NOTICEEE :3 :
+
+The dynamic resizing bug that plagues almost every device is on its way to being fixed. the new build will u
+be uploaded here, APKPure, Uptodown and Itch.io page.
 
 
 the current *Canary* release is:
 1.1-CAN.
 
 the current *Release* build is:
-1.1-REL.
+1.2-REL.
 
 
  
